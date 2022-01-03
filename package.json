@@ -1,0 +1,17 @@
+{
+  "name": "qiita-connect",
+  "main": "./src/index.js",
+  "version": "1.0.0",
+  "description": "Add menu to sync with Qiita",
+  "keywords": [],
+  "repository": "https://github.com/Luke-1220/inkdrop-qiita-connect",
+  "license": "MIT",
+  "engines": {
+    "inkdrop": "^5.x"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "markdown-yaml-metadata-parser": "^3.0.0",
+    "qiita-js-2": "^1.3.1"
+  }
+}

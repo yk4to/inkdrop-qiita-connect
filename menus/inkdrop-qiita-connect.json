@@ -1,0 +1,11 @@
+{
+  "context-menu": {
+    ".note-list-item-view": [
+      { "label": "Publish to Qiita", "command": "qiita-connect:publish-single" },
+      { "label": "Sync with Qiita", "command": "qiita-connect:sync-single" }
+    ],
+    ".sidebar-menu-book-list-item": [
+      { "label": "Sync with Qiita", "command": "qiita-connect:sync-folder" }
+    ]
+  }
+}
