@@ -87,6 +87,9 @@ You can get the token associated with your account from [here](https://qiita.com
 
 ## Changelogs
 
+### 1.0.1
+* Fixed a bug that prevented items from being synced.
+
 ### 1.0.0 - First Release
 * Every feature added
 * Every bug fixed
