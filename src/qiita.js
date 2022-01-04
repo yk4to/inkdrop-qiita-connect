@@ -94,21 +94,11 @@ function findPost({ posts, metadata, title }) {
 }
 
 function findPostWithMetadata({ metadata, posts }) {
-  const result = posts.find((post) => post[0].id === metadata.qiitaId)
-  if (result) {
-    return result[0]
-  } else{
-    return result
-  }
+  return posts[0].find((post) => post.id === metadata.qiitaId)
 }
 
 function findPostWithTitle({ posts, title }) {
-  const result = posts.find((post) => post[0].title === title)
-  if (result) {
-    return result[0]
-  } else{
-    return result
-  }
+  return posts[0].find((post) => post.title === title)
 }
 
 // @TODO: maybe get some getTitle functions?  Maybe make a Post object to do this?
