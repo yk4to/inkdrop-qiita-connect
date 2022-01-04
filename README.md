@@ -69,6 +69,8 @@ This plugin will overwrite the article with the ID set in `qiitaId`, or the arti
 
 Since ID matching is the highest priority, if `qiitaId` is set, it will overwrite the article.
 
+`qiitaId` property is automatically added when you post a new article to Qiita.
+
 ## Settings
 
 Preferences -> Plugins -> qiita-connect -> Settings

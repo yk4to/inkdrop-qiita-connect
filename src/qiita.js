@@ -118,7 +118,7 @@ function getMetadataTag({ post, metadata }) {
     //qiitaTitle: post.title,
     qiitaId: post.id,
     //link: post.url,
-    tags: post.tags ? post.tags.map(tag => tag.name) : [],
+    //tags: post.tags ? post.tags.map(tag => tag.name) : [],
   };
   const yamlText = yaml.dump(newMetadata)+''
   return `---

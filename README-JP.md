@@ -51,7 +51,7 @@ tags:
 
 | キー | 型 | デフォルト値 | 必須 |  制限 | 説明 |
 | --- | --- | --- | --- |  --- | --- |
-| qiitaId | string | | [ (はい) ](https://github.com/Luke-1220/inkdrop-qiita-connect/blob/master/README-JP.md#tips) | | 投稿の一意なID（プラグインによって生成されます） |
+| qiitaId | string | | [ (はい) ](https://github.com/Luke-1220/inkdrop-qiita-connect/blob/master/README-JP.md#ヒント) | | 投稿の一意なID（プラグインによって生成されます） |
 | tags | [string] | | はい |  | 投稿に付いたタグ一覧 |
 | gist | boolean | `false` |  |  | 本文中のコードをGistに投稿するかどうか（GitHub連携を有効化している場合のみ有効）|
 | tweet | boolean | `false` |  |  | Twitterに投稿するかどうか (Twitter連携を有効化している場合のみ有効) |
@@ -60,6 +60,14 @@ tags:
 | private | boolean | `false` |  | Individual Only | 限定共有状態かどうかを表すフラグ |
 
 > :warning: Qiita APIが非公開記事をサポートしていないため、非公開記事の公開や同期を行うことはできません。<br>メタデータに `private: true` が含まれている場合、エラーが表示されます。
+
+## ヒント
+
+このプラグインは、`qiitaId`に設定されたIDの記事、または同じタイトルの記事が見つかれば上書きし、見つからなければ新しい記事として投稿します。
+
+IDの一致が最優先されるため、 `qiitaId` が設定されている場合は、その記事を上書きします。
+
+`qiitaId`プロパティは、Qiitaに新しい記事を投稿した時に自動的に追加されます。
 
 ## 設定
 
