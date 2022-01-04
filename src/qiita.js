@@ -115,9 +115,9 @@ function findPostWithTitle({ posts, title }) {
 function getMetadataTag({ post, metadata }) {
   const newMetadata = {
     ...metadata,
-    qiitaTitle: post.title,
+    //qiitaTitle: post.title,
     qiitaId: post.id,
-    link: post.url,
+    //link: post.url,
     tags: post.tags ? post.tags.map(tag => tag.name) : [],
   };
   const yamlText = yaml.dump(newMetadata)+''
