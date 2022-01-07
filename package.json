@@ -1,7 +1,7 @@
 {
   "name": "qiita-connect",
   "main": "./src/index.js",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Add menu to sync with Qiita",
   "keywords": [],
   "repository": "https://github.com/Luke-1220/inkdrop-qiita-connect",

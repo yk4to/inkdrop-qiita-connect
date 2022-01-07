@@ -39,7 +39,7 @@ async function doSync() {
     )
   } catch (err) {
     console.error(err)
-    notify('Error', 'Something went wrong while synching', err.message)
+    notify('Error', 'Something went wrong while syncing', err.message)
   }
 }
 
@@ -53,7 +53,7 @@ async function doSyncFolder() {
     )
   } catch (err) {
     console.error(err)
-    notify('Error', 'Something went wrong while synching', err.message)
+    notify('Error', 'Something went wrong while syncing', err.message)
   }
 }
 
@@ -77,6 +77,12 @@ module.exports = {
       type: 'string',
       default: 'individual',
       enum: ['individual','team'],
+    },
+    openUrlEnabled: {
+      title: 'Open URL In Browser After Posting',
+      description: '',
+      type: 'boolean',
+      default: true,
     },
   },
 

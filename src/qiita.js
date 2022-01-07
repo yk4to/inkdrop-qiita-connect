@@ -38,7 +38,7 @@ export async function publish() {
 
     for (const noteId of noteIds) {
       const note = notes.hashedItems[noteId]
-      files[note.title] = { content: note.body }
+      files[note.title] = { content: note.body, tags: note.tags }
     }
 
     const posts = await getPosts()
@@ -49,16 +49,18 @@ export async function publish() {
       const { cm } = inkdrop.getActiveEditor()
       if (found) {
         //Edit
-        await createPost({ markdown: content, title: key, metadata: metadata, foundPost: found, })
+        const post = await createPost({ markdown: content, title: key, metadata: metadata, foundPost: found, tagIds: value.tags })
         // if no metadata edit the post and put it in there!
         if (metadata && Object.keys(metadata).length === 0) {
-          cm.doc.setValue(getMetadataTag({ post: found, metadata }) + content)
+          cm.doc.setValue(getMetadataTag({ post, metadata }) + content)
+          if (inkdrop.config.get('qiita-connect.openUrlEnabled')) openUrl(post.url)
         }
       } else {
         //Create
-        const post = await createPost({ markdown: content, title: key, metadata: metadata, })
+        const post = await createPost({ markdown: content, title: key, metadata: metadata, tagIds: value.tags })
         if (post) {
-          cm.doc.setValue(getMetadataTag({ post }) + content)
+          cm.doc.setValue(getMetadataTag({ post, metadata }) + content)
+          if (inkdrop.config.get('qiita-connect.openUrlEnabled')) openUrl(post.url)
         } else {
           throw new Error('Failed to post')
         }
@@ -105,10 +107,7 @@ function findPostWithTitle({ posts, title }) {
 function getMetadataTag({ post, metadata }) {
   const newMetadata = {
     ...metadata,
-    //qiitaTitle: post.title,
     qiitaId: post.id,
-    //link: post.url,
-    //tags: post.tags ? post.tags.map(tag => tag.name) : [],
   };
   const yamlText = yaml.dump(newMetadata)+''
   return `---
@@ -116,14 +115,17 @@ ${yamlText}---
 `
 }
 
-function createPost({ markdown, title, metadata, foundPost }) {
+function createPost({ markdown, title, metadata, foundPost, tagIds }) {
+  const tags = getTags(tagIds)
+  console.log(tagIds)
+  console.log(tags)
   if (metadata.private) {
     throw new Error('Please set "private" to false before publishing')
-  }else if (metadata.tags && metadata.tags.length > 0) {
+  }else if (tags && tags.length > 0) {
     let options = {
       body: markdown,
       gist: metadata.gist ?? false,
-      tags: metadata.tags ? metadata.tags.map(tagName => {return {name: tagName, versions: []}}) : [],
+      tags: tags.map(tagName => {return {name: tagName, versions: []}}),
       title: title !== "" ? title : 'untitled',
       tweet: metadata.tweet ?? false,
     }
@@ -149,6 +151,13 @@ function createPost({ markdown, title, metadata, foundPost }) {
   } else {
     throw new Error('Please specify one or more tags')
   }
+}
+
+function getTags(tagIds) {
+  //ref: https://docs.inkdrop.app/reference/state-tags
+  const { tags } = inkdrop.store.getState()
+  const tagHashs = tags.hash
+  return tagIds.map(id=>tagHashs[id].name)
 }
 
 export async function sync() {
@@ -227,10 +236,11 @@ export async function syncAllPosts() {
   // update existing posts
   const editPostPromises = existingPosts.map((post) => {
     const md = post.body
+    const metadata = MetadataParser(files[post.id].body).metadata
     const note = {
       ...files[post.id],
       doctype: 'markdown',
-      body: getMetadataTag({ post }) + md,
+      body: getMetadataTag({ post, metadata }) + md,
       title: post.title,
       updatedAt: +new Date(),
     }
@@ -254,4 +264,9 @@ export async function syncAllPosts() {
   })
 
   await Promise.all([...newPostPromises, ...editPostPromises])
+}
+
+function openUrl(url) {
+  const { shell } = require('electron')
+  shell.openExternal(url)
 }
