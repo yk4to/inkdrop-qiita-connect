@@ -1,14 +1,14 @@
 'use babel'
-import MetadataParser from 'markdown-yaml-metadata-parser'
 import { Qiita } from 'qiita-js-2'
 import yaml from 'js-yaml'
+const matter = require('gray-matter')
 
 const client = new Qiita({
   token: isTeam() ? inkdrop.config.get('qiita-connect.teamToken') : inkdrop.config.get('qiita-connect.token'),
 })
 
 function isTeam() {
- return inkdrop.config.get('qiita-connect.mode') == 'team'
+  return inkdrop.config.get('qiita-connect.mode') == 'team'
 }
 
 export async function publish() {
@@ -44,7 +44,7 @@ export async function publish() {
     const posts = await getPosts()
 
     for (const [key, value] of Object.entries(files)) {
-      const { metadata, content } = MetadataParser(value.content)
+      const { data: metadata, content } = matter(value.content)
       const found = findPost({ posts, title: key, metadata })
       const { cm } = inkdrop.getActiveEditor()
       if (found) {
@@ -75,7 +75,7 @@ export async function publish() {
 }
 
 function getPosts() {
-  return toArray(client.fetchMyItems())//fetchMyItems()
+  return toArray(client.fetchMyItems())
 }
 
 async function toArray(asyncIterator){ 
@@ -195,7 +195,7 @@ export async function sync() {
     const posts = await getPosts()
 
     for (const [key, value] of Object.entries(files)) {
-      const { metadata } = MetadataParser(value.content)
+      const { data: metadata } = matter(value.content)
       const found = findPost({ posts, title: key, metadata })
 
       if (found) {
@@ -222,12 +222,12 @@ export async function syncAllPosts() {
   const posts = await getPosts()
 
   const noteIds = notes.items
-    .map((note) => MetadataParser(note.body).metadata.qiitaId || undefined)
+    .map((note) => matter(note.body).data.qiitaId || undefined)
     .filter((v) => v !== undefined)
 
   const files = {}
   noteIds.forEach((id) => {
-    files[id] = notes.items.find((note) => MetadataParser(note.body).metadata.qiitaId === id)
+    files[id] = notes.items.find((note) => matter(note.body).data.qiitaId === id)
   })
 
   const existingPosts = posts[0].filter((post) => noteIds.includes(post.id))
@@ -236,7 +236,7 @@ export async function syncAllPosts() {
   // update existing posts
   const editPostPromises = existingPosts.map((post) => {
     const md = post.body
-    const metadata = MetadataParser(files[post.id].body).metadata
+    const metadata = matter(files[post.id].body).data
     const note = {
       ...files[post.id],
       doctype: 'markdown',
